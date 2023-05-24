@@ -8,13 +8,13 @@ userRouter.get("/",(req,res)=>{
 })
 
 userRouter.post("/register",async(req,res)=>{
-    const {name,email,pass,age} = req.body
+    const {name,email,pass,role} = req.body
     try{
         bcrypt.hash(pass, 2, async(err, hash) => {   // hashing the password
             if(err){
                 res.send('something went wrong while hashing password')
             }else{
-                const user = new UserModel({name,email,pass:hash,age});
+                const user = new UserModel({name,email,pass:hash,role});
                  await user.save()
                  res.send("registered successfully")
             }
@@ -25,7 +25,7 @@ userRouter.post("/register",async(req,res)=>{
 })
 
 userRouter.post("/login",async(req,res)=>{
-    const {email,pass} = req.body;;
+    const {email,pass} = req.body;
     try{
         const user = await UserModel.find({email});
         const token = jwt.sign({userId:user[0]._id},"masai");// generate a random token
